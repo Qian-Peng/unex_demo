@@ -1,3 +1,4 @@
+''''
 #!usr/bin/python3.6
 import serial
 import sys
@@ -39,3 +40,12 @@ def sendAT_Cmd(serInstance,atCmdStr,waitforSuccess):
 ser = serial.Serial("/dev/ttyUSB0",115200,timeout=30)
 sendAT_Cmd(ser,'camReceiving 10000\r',1)
 ser.close()
+'''''
+a="header.message_id: 21"
+ind=[2,3]
+print(int(a[19:]))
+if(ind.count(1)):
+    print("ind.count(1)")
+else:
+    print("No")
+

@@ -13,9 +13,15 @@ import re
 
 Event_flag = 0
 MAX_LOOP_NUM = 100000
+Current_vehicles = 0
+vehicles_id = []
 
 def waitForCmdRsp():
     pass
+
+def calcualteVe(line):
+    ve_id = int(line[19,])
+    
 
 def waitForCmdOKRsp():
     maxloopNum = 0
@@ -27,7 +33,10 @@ def waitForCmdOKRsp():
             print("Rsponse : %s"%line.decode('utf-8'))
         except:
             pass
-            
+        if(re.search(b'message_id',line)):
+            calcualteVe()
+        if(Event_flag):
+            pass    
         if ( re.search(b'successfully',line)):
             break
         elif(maxloopNum > MAX_LOOP_NUM):
@@ -47,11 +56,12 @@ def sendAT_Cmd(serInstance,atCmdStr,waitforSuccess):
 #Test.print_status()
 
 ser = serial.Serial("/dev/ttyUSB0",115200,timeout=30)
-
+count = 0
 while(1):
-    while(Event_flag!=0):
-        pass
+    Current_vehicles = 0
+    vehicles_id = []
     sendAT_Cmd(ser,'camReceiving 10000\r',1)
+
 
 
 
