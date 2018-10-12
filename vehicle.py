@@ -15,10 +15,10 @@ def broadcast_denm():
 def waitForDenmRRsp():
     maxloopNum = 0
     while True:
-        line = ser.readline()
+        line = ser.readline().decode()
         maxloopNum = maxloopNum + 1       
         try:
-            print("Rsponse : %s"%line.decode())
+            print("Rsponse : "+line)
         except:
             pass
         # todo: add rebroadcast algorithm
@@ -32,10 +32,10 @@ def waitForDenmRRsp():
 def waitForCamSRsp():
     maxloopNum = 0
     while True:
-        line = ser.readline()
+        line = ser.readline().decode()
         maxloopNum = maxloopNum + 1       
         try:
-            print("Rsponse : %s"%line.decode())
+            print("Rsponse : "+line)
         except:
             pass           
         if ( re.search(r'successfully',line)):
