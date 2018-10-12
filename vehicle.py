@@ -8,19 +8,37 @@ import re
 
 MAX_LOOP_NUM = 100000
 
-def waitForCmdRsp():
+def broadcast_denm():
     pass
 
-def waitForCmdOKRsp():
+
+def waitForDenmRRsp():
     maxloopNum = 0
     while True:
         line = ser.readline()
         maxloopNum = maxloopNum + 1       
         try:
-            print("Rsponse : %s"%line.decode('utf-8'))
+            print("Rsponse : %s"%line.decode())
+        except:
+            pass
+        # todo: add rebroadcast algorithm
+        #if(re.search(r'recv denm count',line)):
+        #    broadcast_denm()           
+        if ( re.search(r'successfully',line)):
+            break
+        elif(maxloopNum > MAX_LOOP_NUM):
+            sys.exit(0)
+
+def waitForCamSRsp():
+    maxloopNum = 0
+    while True:
+        line = ser.readline()
+        maxloopNum = maxloopNum + 1       
+        try:
+            print("Rsponse : %s"%line.decode())
         except:
             pass           
-        if ( re.search(b'successfully',line)):
+        if ( re.search(r'successfully',line)):
             break
         elif(maxloopNum > MAX_LOOP_NUM):
             sys.exit(0)
@@ -30,9 +48,9 @@ def sendAT_Cmd(serInstance,atCmdStr,waitforSuccess):
     serInstance.write(atCmdStr.encode('utf-8'))
     #or define b'string',bytes should be used not str
     if(waitforSuccess == 1):
-        waitForCmdOKRsp()
+        waitForCamSRsp()
     else:
-        waitForCmdRsp()
+        waitForDenmRRsp()
 
 ser = serial.Serial("/dev/ttyUSB0",115200,timeout=30)
 while(1):

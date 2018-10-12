@@ -26,7 +26,7 @@ def calcualteVe(line):
         vehicles_id.append(ve_id)
 
 
-def waitForDenmRsp():
+def waitForDenmSRsp():
     maxloopNum = 0
     while True:
         line = ser.readline().decode()
@@ -41,7 +41,7 @@ def waitForDenmRsp():
             sys.exit(0)
 
 
-def waitForCamRsp():
+def waitForCamRRsp():
     maxloopNum = 0
     while True:
         line = ser.readline().decode()
@@ -64,9 +64,9 @@ def sendAT_Cmd(serInstance,atCmdStr,waitforSuccess):
     serInstance.write(atCmdStr.encode('utf-8'))
     #or define b'string',bytes should be used not str
     if(waitforSuccess == 1):
-        waitForCamRsp()
+        waitForCamRRsp()
     else:
-        waitForDenmRsp()
+        waitForDenmSRsp()
 
 
 ser = serial.Serial("/dev/ttyUSB0",115200,timeout=30)
@@ -77,7 +77,7 @@ while(1):
     print("Info: CAM messages received successfully and "
         +str(len(vehicles_id))+" vehicles are detected!\n")
     if(Event_flag):
-        denm_cmd = ('denm_event_send 15000 1000 '+demo_event.get_cmd()+'\r')
+        denm_cmd = ('denm_event_send 15000 100 '+demo_event.get_cmd()+'\r')
         print(denm_cmd)
         sendAT_Cmd(ser,denm_cmd,0)
 
