@@ -1,4 +1,3 @@
-''''
 #!usr/bin/python3.6
 import serial
 import sys
@@ -16,13 +15,11 @@ def waitForCmdOKRsp():
     maxloopNum = 0
     while True:
         line = ser.readline()
-        maxloopNum = maxloopNum + 1
-        
+        maxloopNum = maxloopNum + 1       
         try:
             print("Rsponse : %s"%line.decode('utf-8'))
         except:
-            pass
-            
+            pass           
         if ( re.search(b'successfully',line)):
             break
         elif(maxloopNum > MAX_LOOP_NUM):
@@ -38,14 +35,8 @@ def sendAT_Cmd(serInstance,atCmdStr,waitforSuccess):
         waitForCmdRsp()
 
 ser = serial.Serial("/dev/ttyUSB0",115200,timeout=30)
-sendAT_Cmd(ser,'camReceiving 10000\r',1)
-ser.close()
-'''''
-a="header.message_id: 21"
-ind=[2,3]
-print(int(a[19:]))
-if(ind.count(1)):
-    print("ind.count(1)")
-else:
-    print("No")
+while(1):
+    sendAT_Cmd(ser,'camSendingMandatory 2000\r',1)
+    sendAT_Cmd(ser,'denm_event_recv 2000\r',1)
+
 
