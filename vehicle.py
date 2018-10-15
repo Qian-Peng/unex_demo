@@ -8,6 +8,7 @@ import re
 
 MAX_LOOP_NUM = 100000
 
+# Broadcast algorithm after receving denm msgs 
 def broadcast_denm():
     pass
 

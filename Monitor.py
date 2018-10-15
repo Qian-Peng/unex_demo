@@ -1,7 +1,6 @@
 #!usr/bin/python3.6
-# Basicly monitor is attached on a traffic light and keeps on monitoring the 
-# status of traffic accidences, sending out denm messages (notifications for vehicles)
-# and receving 
+# Basicly monitor is attached on a traffic light or RSU and keeps on monitoring the 
+# status of traffic, sending out denm messages (notifications for vehicles) if events happen
 
 from Event import Event
 
@@ -11,21 +10,29 @@ import sys
 import os
 import re
 
+# Simulate event trigger
 global Event_flag
 Event_flag = 1
+
+# Can be used to limit show up messages
 MAX_LOOP_NUM = 100000
+
+# A list to store vehicle ids in a circle
 global vehicles_id
 vehicles_id = []
 
+# The content of simulated event according to DENM definition
 demo_event = Event(1,6,2,0)
 
+# Record vehicle ids
 def calcualteVe(line):
     ve_id = int(line[19:])
     global vehicles_id
     if(vehicles_id.count(ve_id)==0):
         vehicles_id.append(ve_id)
 
-
+# Waiting for Unex responses after sending out denm msgs,
+# could be extended with more functions
 def waitForDenmSRsp():
     maxloopNum = 0
     while True:
@@ -41,6 +48,8 @@ def waitForDenmSRsp():
             sys.exit(0)
 
 
+# Waiting for Unex responses after sending out Cam_Rec msgs,
+# if cam is received, it will be processed
 def waitForCamRRsp():
     maxloopNum = 0
     while True:
@@ -68,16 +77,17 @@ def sendAT_Cmd(serInstance,atCmdStr,waitforSuccess):
     else:
         waitForDenmSRsp()
 
-
+# Serial config
 ser = serial.Serial("/dev/ttyUSB0",115200,timeout=30)
 
+# Main loop
 while(1):
     vehicles_id = []
     sendAT_Cmd(ser,'camReceiving 15000\r',1)
     print("Info: CAM messages received successfully and "
         +str(len(vehicles_id))+" vehicles are detected!\n")
     if(Event_flag):
-        denm_cmd = ('denm_event_send 15000 100 '+demo_event.get_cmd()+'\r')
+        denm_cmd = ('denm_event_send 15000 1000 '+demo_event.get_cmd()+'\r')
         print(denm_cmd)
         sendAT_Cmd(ser,denm_cmd,0)
 
